@@ -1,0 +1,79 @@
+.h4 {
+	font-size: 16px;
+}
+
+.text-black {
+	color: #212121;
+}
+
+.o-noStytle {
+	background: none;
+	box-shadow: none;
+	border: 0;
+	border-radius: 0;
+	border-bottom: 1px solid #dfdfdf;
+}
+
+.o-nopadding {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.o-img {
+	width: 50px;
+	height: 50px;
+	border-radius:50px;
+}
+
+.o-tb {
+	width: 15px;
+	height: 15px;
+	margin-left: 5px;
+}
+
+/*顶部titlebar*/
+.x-titlebar.o-top {
+	background-color: rgb(75,115,164);
+}
+
+.o-name {
+	color: #fff;
+	padding-left: 10px;
+}
+
+.x-createGroup {
+	border-color:rgb(75, 115, 164);
+	background-color:rgb(75, 115, 164);
+}
+
+/*搜索*/
+.o-seach input {
+	border-bottom: 1px solid #dfdfdf;
+}
+
+.o-seach input:focus {
+	border-bottom: 1px solid #4bb922;
+}
+
+.o-seach i {
+	font-size: 20px;
+	color: #999;
+}
+
+.o-seach .form-control {
+	padding-left: 42px;
+	padding-right: 0;
+	cursor: pointer;
+}
+
+.o-seach .form-control-feedback {
+	left: 5px;
+	top: 10px;
+}
+
+.o-newfirend {
+	display: none;
+}
+.x-name{
+	white-space: nowrap;text-overflow: ellipsis;overflow: hidden;vertical-align: middle;
+}

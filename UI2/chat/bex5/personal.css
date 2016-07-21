@@ -1,0 +1,57 @@
+.return-div {
+	font-size:18px;
+	display:flex;
+	margin-top:4px;
+}
+
+.item-container {
+	padding : 0px;
+}
+
+.o-img {
+	width: 70px;
+	height: 70px;
+	border-radius: 70px;
+}
+
+.top-background {
+	background-color:#4B73A4;
+}
+
+.user-name {
+	font-size:22px; color:#111; margin-top:28px; margin-left:6px; display:block;
+}
+
+.item-image {
+	float:left;
+}
+.item-row {
+	margin:5px 0px 0px 10px;
+	white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.item-value {
+	color:#111; font-size:13pt;
+}
+.item-desc {
+	color:#CCCCCC; font-size:10pt;
+}
+
+.setup-title {
+	font-size:13pt;
+	color:#4B73A4;
+	margin-left:46px;
+	height:48px;
+	line-height:48px;
+}
+.setup-item {
+	font-size:12pt;
+	color:#111;
+	float:left;
+	margin-top:12px;
+}
+
+.item-container-temp:active {
+	background-color: whitesmoke;
+}

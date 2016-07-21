@@ -1,0 +1,48 @@
+.x-query-input {
+	margin: 4px;
+	border: 1px solid #eeeeee;
+	border-radius: 4px;
+	height: 38px;
+	padding: 8px 12px;
+	font-size: 14px;
+	line-height: 1.42857143;
+	color: #555555;
+	background-color: #ffffff;
+}
+
+.x-query-input input {
+	border: 0;
+	margin: -4px 12px;
+	height: 28px;
+}
+
+.x-icon-lg {
+	font-size: 18px;
+}
+
+.x-cls-filter {
+	color: red;
+	cursor: pointer;
+}
+
+.x-title {
+	background-color: #dae0ef;
+	color: #888;
+	font-weight: bold;
+	border-radius: 4px;
+	padding: 4px 4px 4px 8px;
+}
+
+.x-org-image {
+  height: 48px;
+  width: 58px;
+}
+.x-org-image .x-blob-img {
+	border-radius: 50px;
+}
+.list-group{ border:0; border-radius:0; box-shadow:none;}
+.o-img{
+	width:48px;
+	height:48px;
+	border-radius:48px;
+}

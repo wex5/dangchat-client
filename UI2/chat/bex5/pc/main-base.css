@@ -1,0 +1,17 @@
+.x-chats,.x-chats tr {
+	height: 100%;
+	width: 100%;
+}
+
+.x-chats-items{
+	width: 30%;
+	min-width: 240px;
+	position: relative;
+	border-right: 1px solid #dddddd;
+}
+
+.x-chat-content{
+	width: 100%;
+	position: relative;
+}
+

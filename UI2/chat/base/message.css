@@ -1,0 +1,320 @@
+/*顶部titlebar*/
+.x-titlebar.o-top {
+	background-color: rgb(75,115,164);
+}
+
+.x-titlebar.o-top span {
+	font-size: 16px;
+}
+
+.o-img {
+	width: 40px;
+	height: 40px;
+	border-radius:40px;
+}
+
+.operationImg {
+	width: 30px;
+	height: 30px;
+}
+
+.text-black {
+	color: #313131;
+}
+
+.media {
+	margin-bottom: 10px;
+}
+
+.media-body {
+	vertical-align: middle;
+}
+
+.o-name {
+	/*width: auto;*/
+	color: #fff;
+	font-size: 16px;
+	background: none;
+	border: none;
+	/*border-left: 1px solid #2e2f33;*/
+}
+
+/*消息框背景*/
+.o-messageBox1,.o-messageBox2 {
+	position: relative
+}
+
+.o-messageBox1 {
+	padding-right: 50px;
+}
+
+.o-messageBox1 span.msgContent{
+	float: left;
+	padding: 8px 10px;
+	margin-left: 7px;
+	font-size: 18px;
+	border: 1px solid #d2d2d2;
+	border-radius: 5px;
+	background-color: #fafafa;
+}
+
+.o-messageBox1 .o-icon {
+	width: 8px;
+	height: 14px;
+	position: absolute;
+	left: 0;
+	top: 12px;
+	z-index: 1;
+}
+
+.o-messageBox2 {
+	padding-left: 50px;
+}
+
+.o-messageBox2 span.msgContent {
+	float: right;
+	padding: 8px 10px;
+	margin-right: 7px;
+	font-size: 18px;
+	border: 1px solid rgba(137, 174, 86, 0.8);
+	border-radius: 5px;
+	background-color: #b1e866;
+}
+
+.o-messageBox2 .o-icon {
+	width: 8px;
+	height: 14px;
+	position: absolute;
+	right: 0;
+	top: 12px;
+	z-index: 1;
+}
+
+
+.o-messageBox2 span.photoMsg,
+.o-messageBox1 span.photoMsg,
+.o-messageBox2 span.audioMsg,
+.o-messageBox1 span.audioMsg,
+.o-messageBox2 span.videoMsg,
+.o-messageBox1 span.videoMsg{
+	padding:2px;
+}
+
+.video{
+	width: 10em;
+	height: auto;	
+}
+
+.audio{
+	font-size: 1.5em;
+	margin: 4px 12px;
+	cursor: pointer;
+	color: rgb(47, 164, 231);
+}
+
+.audio + label{
+    font-size: 14px;
+	cursor: pointer;
+	vertical-align: text-bottom;
+    padding-right: 12px;
+}
+    
+.audioPlaing.audio{
+	color: rgb(225, 15, 15);
+}
+
+/*底部*/
+.x-panel-bottom {
+	z-index: 2;
+	background-color: #fff;
+}
+
+.o-bottom {
+	height: 48px;
+	padding-top: 3px;
+	margin-bottom: 15px;
+	background-color: #fefefe;
+	border-top: 1px solid rgba(214, 214, 214, 0.6);
+	border-top: 1px solid rgba(214, 214, 214, 0.6);
+}
+
+.o-bottom .o-input {
+	height: 32px;
+	background: none;
+	border: none;
+	box-shadow: none;
+	border-radius: 0;
+	border-bottom: 1px solid #dfdfdf;
+	margin-left:2px;
+}
+
+.o-bottom .o-input:focus {
+	border-bottom: 1px solid #4bb922;
+}
+
+.o-bottom .x-col-fixed {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.o-bottom .x-col-fixed .btn {
+	background-color: #fff;
+	/*border: 1px solid #999;*/
+}
+
+.o-bottom .o-rightBtn {
+	padding: 0;
+}
+
+.o-bottom .o-rightBtn .btn.btn-only-icon {
+	font-size: 32px;
+	padding: 0;
+	margin-top: -8px;
+}
+
+.o-bottom .o-rightBtn .btn.btn-only-label {
+	display: none;
+	padding: 6px;
+	margin-top: 3px;
+	color: #fff;
+	font-size: 12px;
+	background-color: #45c018;
+	border-radius: 3px;
+	width:40px;
+}
+
+/*附件*/
+.x-fileInput{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: auto;
+	width: auto;
+}
+
+.x-fileInput > input{
+	opacity: 0;
+	height: 100%;
+	width: 100%;
+}
+
+.right-img {
+	z-index: 9999;
+	float: right;
+}
+
+.right-text {
+	float: right;
+}
+
+.emoji-button-container {
+	margin-bottom:2px; margin-left:-3px; border-bottom: 1px solid #dfdfdf; width:28px;
+}
+.emoji-button-container img {
+	width: 26px;
+	height: 26px;
+	margin-top:4px;
+}
+.a{
+	width: 190px;
+}
+
+.content{
+	margin-top:17px;
+}
+
+.msgContent {
+	width:auto; display:block; white-space:pre-wrap; word-wrap:break-word; word-break:break-all; overflow:hidden;
+	-webkit-touch-callout:none;
+}
+.x-senderName{
+	margin: 0px 8px;
+	float : left;
+	font-size:smaller;
+}
+.x-senderTime{
+	margin: 0px 8px;
+	font-size: smaller;
+	float:left;
+}
+.x-ownSenderMessageTime{
+	margin :0px 7px;
+	font-size: smaller;
+	float: right;
+}
+.x-messageTime{
+	margin-right:8px;
+	font-size:smaller;
+	float: left;
+}
+.x-file{
+	color:rgb(51, 122, 183);
+	font-size:40px;
+}
+.x-rightPhotoState{
+	font-size: 30pt;
+    position: absolute;
+    right: 35px;
+    z-index: 100;
+    top: 35px;
+    color: floralwhite;
+}
+.x-leftPhotoState{
+	position: absolute;
+    font-size: 30pt;
+    z-index: 100;
+    left: 35px;
+    top: 35px;
+    color: floralwhite;
+}
+.x-recevied{
+	color: blue;
+}
+.x-read{
+	color: green;
+}
+.x-error{
+	color:red;
+}
+.x-state{
+	
+	padding:0px 7px;
+	float: right;
+}
+.x-detail{
+	width:50px;
+}
+.o-messageBox1 span.x-touch{
+	background-color : gainsboro;
+}
+.o-messageBox2 span.x-touch{
+	background-color : darkseagreen;
+}
+.x-close{
+	height: 100%;
+	margin-top: 5px;
+}
+.x-display{
+	display: none;
+}
+.x-attentionNum{
+	position: relative;
+	top : -4px;
+}
+.x-attention{
+	color:red;
+	height: 10px;
+}
+.x-fileIcon{
+	font-size: 20px;
+}
+
+.x-item-hide{
+	display: none !important;
+}
+.x-btn-PrScrn{}	
+.x-moreClass{
+	display:none;
+}

@@ -1,0 +1,57 @@
+.x-func-icon {
+	height: 36px;
+	width: 42px;
+}
+
+.x-func-body {
+	padding: 0 8px;
+}
+
+.x-func-info-body {
+	padding-top: 8px;
+}
+
+.x-func-checkbox {
+	text-align: center;
+	padding: 4px 8px;
+}
+
+.x-title {
+	background-color: #2fa4e7;
+	color: #ffffff;
+	font-weight: bold;
+	font-size: 18px;
+	border-radius: 4px;
+	padding: 4px 4px 4px 8px;
+}
+
+.x-query-input > input:focus{
+	outline:none;
+}
+
+.x-icon-lg {
+	font-size: 18px;
+}
+
+.x-cls-filter {
+	color: red;
+	cursor: pointer;
+}
+
+.x-query-input {
+	margin: 4px;
+	border: 1px solid #eeeeee;
+	border-radius: 4px;
+	height: 38px;
+	padding: 8px 12px;
+	font-size: 14px;
+	line-height: 1.42857143;
+	color: #555555;
+	background-color: #ffffff;
+}
+
+.x-query-input input {
+	border: 0;
+	margin: -4px 12px;
+	height: 28px;
+}

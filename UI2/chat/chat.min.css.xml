@@ -1,0 +1,11 @@
+<root>
+	<config>
+		<file>lib/photoswipe/photoswipe.css</file>
+		<file>lib/photoswipe/default-skin.css</file>
+		<file>lib/superInput/icon/iconfont.css</file>
+		<file>lib/superInput/icon/addicon/iconfont.css</file>
+		<file>lib/superInput/css/emoji.css</file>
+		<file>lib/superInput/css/superInput.css</file>
+		<output name="chat.min.css" skin="desktop"/>
+	</config>
+</root>

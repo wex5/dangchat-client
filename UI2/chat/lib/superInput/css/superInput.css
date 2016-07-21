@@ -1,0 +1,127 @@
+.x-superinput{
+	position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    bottom: 0;
+    transform:translate3d(0,0,0);    
+    background-color: white;/*smoke*/
+    -webkit-touch-callout:none;
+    top:auto;
+}
+
+.x-superinput-pc{
+	position: absolute;
+	top:auto!important;
+}
+
+.x-superinput .x-input-content{
+	overflow:auto;
+	min-height: 30px;
+	padding: 8px 4px 4px 4px;
+	color: #555;
+	font-size: 16px;
+	border: none;
+	border-bottom: 1px solid #555;
+	outline: none;
+	margin: 0 8px;
+	ime-mode: disabled;
+	user-modify: read-write;
+	-webkit-user-modify: read-write;
+	-moz-user-select: auto;
+	-ms-user-select: auto;
+	-webkit-user-select: auto;
+}
+.x-superinput .x-voice-info{
+    padding: 12px 4px 4px 4px;
+}
+.x-voice-recording{
+  color: red;	
+}
+.x-voice-info-text{
+    padding-left: 36px;
+}
+.x-superinput .x-input-content:focus,
+.x-superinput .x-input-content.active{
+	border-bottom-color: rgb(77, 144, 254);
+}
+
+.x-superinput .x-superinput-left > .btn,
+.x-superinput .x-superinput-right > .btn{
+	font-size: 20px;
+}
+
+.x-superinput .x-superinput-left{
+	width: 46px;
+}
+
+.x-superinput.x-superinput-pc .x-superinput-left,.x-superinput.x-superinput-pc .x-superinput-right{
+	display:inline;
+}
+.x-superinput.x-superinput-pc .x-btn-send{
+	float:right;
+}
+
+.x-superinput.x-superinput-pc .x-input-area{
+	border-top:1px solid lightblue;
+	position: absolute;
+    width: 100%;
+    top: 42px;
+    bottom: 0;
+}
+
+.x-superinput.x-superinput-pc .x-input-content{
+	height:98%;
+}
+
+.x-superinput .x-superinput-right{
+	width: 97px;
+}
+
+.x-superinput-emoji{
+	height:290px;
+	background-color: #f8f6f7;
+	position: relative;
+}
+
+.x-superinput-pc .x-superinput-emoji{
+	height:25vh;
+	background-color: #f8f6f7;
+	position: absolute;
+	top: -25vh;
+    width: 80%;
+    display:none;
+}
+.x-superinput-pc .x-superinput-area{
+	height:25vh;
+}
+
+.x-superinput-emoji .row > .cell{
+	padding: 8px;
+}
+
+.x-superinput-emoji-contents{
+	position: relative;
+}
+
+.x-superinput-emoji-title{
+	height: 32px;
+}
+
+.x-superinput-emoji-title .x-card.btn-group .btn{
+	height: 26px;
+	text-transform: capitalize;
+	border-top: 0;
+}
+
+.iphone .x-superinput-emoji{
+	height:240px;
+}
+.x-emoji-hide{
+	height:0 !important;
+}
+
+.x-emoji-hide .x-superinput-emoji-title{
+    height: 0;
+    overflow: hidden;
+}

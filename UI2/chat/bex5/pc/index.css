@@ -1,0 +1,50 @@
+.x-chat-page-container,.x-chat-page-content{
+	height: 100%;
+}
+
+.x-chat-table {
+	height: 100%;
+	width: 100%;
+}
+
+.x-chat-tr {
+	height: 100%;
+	width: 100%;
+}
+
+.x-chat-meun {
+	width: 40px;
+	vertical-align: top;
+	padding: 8px;
+	background-color: aliceblue;
+}
+
+.x-chat-meun-tabs>li>a {
+	color: rgba(0, 180, 180, 1);
+}
+
+.x-chat-meun-tabs>li>a>i {
+	font-size: 20px;
+}
+
+.x-chat-meun-tabs>li.active>a,.x-chat-meun-tabs>li.active>a:hover {
+	background-color: rgba(0, 180, 180, 1);
+	color: #ffffff;
+}
+
+.x-chat-main{
+	width: 100%;
+	/*background-color: azure;*/
+	position: relative;
+}
+
+.x-chat-main > .x-contents{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: auto;
+	width: auto;
+	overflow: hidden;
+}

@@ -1,0 +1,120 @@
+.o-img {
+	width: 70px;
+	height: 70px;
+	border-radius:70px;
+}
+
+.o-code {
+	width: 20px;
+	height: 20px;
+}
+
+.o-tb {
+	width: 15px;
+	height: 15px;
+	margin-left: 5px;
+}
+
+.text-black {
+	color: #212121;
+}
+
+.o-marginRight {
+	margin-right: 20px;
+}
+
+.h4 {
+	font-size: 16px;
+}
+
+.o-noStytle {
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+}
+
+/*顶部titlebar*/
+.x-titlebar.o-top {
+	background-color: #4B73A4;
+}
+
+.x-titlebar.o-top span {
+	font-size: 16px;
+}
+
+/*名称*/
+.o-name {
+	padding-left: 10px;
+	color: #fff;
+	font-size: 16px;
+	border-left: 1px solid #2e2f33;
+}
+/*视频聊天按钮*/
+.o-btn {
+	background-color: #fff;
+	margin-top: 15px;
+}
+/*发消息按钮*/
+.x-green {
+	border-color: #45c018;
+	background-color: #45c018;
+}
+
+.top-background {
+	background-color:#4B73A4;
+}
+
+.item-container {
+	padding:5px 10px !important
+}
+
+.item-image {
+	float:left;
+}
+.item-row {
+	margin:5px 0px 0px 10px;
+}
+.item-value {
+	color:#111; font-size:13pt;
+}
+.item-desc {
+	color:#CCCCCC; font-size:10pt;
+}
+
+.setup-title {
+	font-size:13pt;
+	color:#4B73A4;
+	margin-left:46px;
+	height:48px;
+	line-height:48px;
+}
+.setup-item {
+	font-size:12pt;
+	color:#111;
+	float:left;
+	margin-top:12px;
+}
+
+.item-container-temp:active {
+	background-color: whitesmoke;
+}
+
+.account-name {
+	font-size:18px; color:#111;
+}
+.user-status {
+	font-size:13px; color:#858585;
+}
+.account-caption {
+	width:73px; font-size:15px; float:left; margin-top:5px; color:#111;
+}
+.account-value {
+	font-size:15px; float:left; margin-top:5px; color:#111; margin-left:10px;
+}
+.list-item {
+	margin-top:5px;
+}
+.x-personal{
+	height: 100%;
+	width:50px;
+}

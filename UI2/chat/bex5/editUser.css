@@ -1,0 +1,45 @@
+.top-background {
+	background-color:#4B73A4;
+}
+
+.content-panel {
+	background-color:#fff;
+}
+
+.edit-container {
+	margin:32px 25px 32px 25px;
+}
+
+.edit-container input {
+	color:#111; font-size:12pt;
+}
+
+.edit-input {
+	cursor: pointer;
+	border:none;
+	border-bottom:solid 2px red;
+	height:32px; width:300px;
+}
+.edit-input:focus {
+	outline:none;
+}
+
+.edit-biginput {
+	cursor: pointer;
+	display:none;
+	border:none;
+	border-bottom:solid 2px red;
+	height:64px; width:300px;
+}
+.edit-biginput:focus {
+	outline:none;
+}
+
+.x-panel-bottom span {
+	color:#111; font-size:11pt; font-weight:normal;
+}
+
+.btn-right-border {
+	border-right:solid 1px #DDDDDD !important;
+}
+
