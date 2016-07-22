@@ -28,8 +28,7 @@ define(function(require) {
 	};
 	
 	return {
-		endpoints :/*[ 'ws://im.wex5.com:29080' ]*/ 
-			[ 'ws://192.168.1.28:9080' ],//配置im服务器地址wss://192.168.1.28:8443
+		endpoints : [ 'ws://127.0.0.1:9080' ], //IM服务器地址
 		logHandler : logHandler
 	};
 });
