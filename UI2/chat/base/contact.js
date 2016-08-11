@@ -44,7 +44,7 @@ define(function(require) {
 	Model.prototype.modelUnLoad = function(event) {
 		// 解绑用户
 				var currentPersonID = IM.getCurrentPerson().id;
-		if(this.params.contactId !== currentPersonID){
+		if(this.params.contactId !== currentPersonID&&this._bindUserHandle){
 			this._bindUserHandle.unbind();
 		}
 	};
@@ -100,7 +100,7 @@ define(function(require) {
 
 	Model.prototype.modelInactive = function(event) {
 		var currentPersonID = IM.getCurrentPerson().id;
-		if(this.params.contactId !== currentPersonID){
+		if(this.params.contactId !== currentPersonID&&this._bindUserHandle){
 			this._bindUserHandle.unbind();
 		}
 	};
