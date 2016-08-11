@@ -17,6 +17,9 @@ define(function(require) {
 		var type = this.params.type;
 		var peer = IM.getPeer(id, type);
 		self._bindGroupHandle = IM.bindGroup(peer.id, function(group) {
+			self.comp("isShareGroup").set({
+				"checked" : group.isShare
+			});
 			var rows = [];
 			self.adminId = group.adminId;
 			$(self.getElementByXid('groupName')).text(group.name);

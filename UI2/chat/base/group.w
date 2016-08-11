@@ -103,7 +103,7 @@
             ON=" " OFF=" "/>  
           <div style="clear:both;"/> 
         </div> 
-      <div class="list-group-item item-container" xid="div19" style="display:none;">
+      <div class="list-group-item item-container" xid="div19" bind-visible="isAdmin" style="display:none;">
    <div class="item-image" xid="div20">
     <a component="$UI/system/components/justep/button/button" class="btn btn-link btn-only-icon" label="button" xid="button7" icon="icon-android-reminder">
      <i xid="i10" class="icon-android-reminder" style="font-size:20pt;"></i>
@@ -111,7 +111,7 @@
   </div> 
    <div style="float:left;width:130px;margin-top:12px;font-size:12pt;color:#111;margin-left:12px;" xid="div21">共享群组</div>
    <span component="$UI/system/components/justep/button/toggle" class="x-toggle" xid="isShareGroup" style="width:78px; margin:1px 0px 0px 186px;" ON=" " OFF=" " onChange="isShareGroupChange"></span>
-   <span xid="span16" style=" margin-left: 264px; position: absolute;top:20px;"><![CDATA[如果设置为共享，新加入的用户可以浏览历史消息。]]></span><div style="clear:both;" xid="div22"></div>
+   <div xid="div23"><span xid="span16" style="margin-left: 15px;"><![CDATA[如果设置为共享，新加入的用户可以浏览历史消息。]]></span></div><div style="clear:both;" xid="div22"></div>
   </div></div>  
       <div class="panel list-group o-noStytle" style="border:none;" component="$UI/system/components/bootstrap/panel/panel"
         xid="panel1"> 
