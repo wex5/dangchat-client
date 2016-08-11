@@ -4,59 +4,34 @@ define(function(require) {
 	var Utils = require("../lib/utils");
 	var SuperInput = require("../lib/superInput/superInput");
 	var IM = require("../base/js/im");
+	var Push = require("$UI/system/lib/base/push");
+
 	var Model = function() {
 		this.callParent();
-		this.actorReadyOK = justep.Bind.observable(false);
+		this.loginActorDfd;
 	};
-
+	Model.prototype.getMessageUrl = function(){
+		return require.toUrl('./message.w');
+	};
 	Model.prototype.manageGroupBtnClick = function(event) {
 		justep.Shell.showPage("$UI/work/org/createOrgActivity.m.w");
 	};
-
-	var getIndex = function(id, dialogs) {
-		var index = -1;
-		$.each(dialogs, function(i, v) {
-			if (v.peer.peer.id === id) {
-				index = i;
-				return false;
-			}
-		});
-		return index;
-	};
-	Model.prototype.getMessageUrl = function() {
-		return require.toUrl('./message.w');
-	};
-	var isIn = function(dialogs, id) {
-		var dialogsID = [];
-		for (var i = 0; i < dialogs.length; i++) {
-			dialogsID.push(dialogs[i].peer.peer.id);
-		}
-		if (dialogsID.indexOf(id) >= 0) {
-			return true;
-		} else {
-			return false;
-		}
-	};
-
+	
 	Model.prototype.init = function() {
 		var self = this;
-		var rows = store.get("chat_dialogData");
+		var rows = store.get("wex5Chat_dialogData");
 		var cUid = IM.getCurrentPersonID();
-		var sUid = store.get("chat_uid");
+		var sUid = store.get("wex5Chat_uid");
 		if (cUid == sUid && rows) {
 			this.comp("dialogData").loadData({
 				rows : rows
 			});
-			if (rows && rows.length !== 0) {
-				self.comp('popOver').hide();
-			}
 		}
-		store.set("chat_uid", cUid);
-		IM.loginActor().done(function() {
-			self.actorReadyOK.set(true);
+		store.set("wex5Chat_uid", cUid);
+		this.loginActorDfd = IM.loginActor();
+		this.loginActorDfd.done(function() {
+			justep.Shell.fireEvent('actorLongined');
 			self.initEvent();
-			self.comp('contactsContainer').load();
-			self.comp('windowContainer').load();
 			var uid = IM.getCurrentPerson().uid;
 			$(document).on('resume', function() {
 				IM.updateClientState("-1," + uid + ",1");
@@ -68,151 +43,95 @@ define(function(require) {
 	};
 
 	Model.prototype.pagesActiveChanged = function(event) {
+		var self = this;
+		var i = event.to;
+		this.loginActorDfd.then(function() {
+			if (i=== 1) {
+				self.comp('contactsContainer').load();
+			}
+			if (i === 2) {
+				self.comp('windowContainer').load();
+			}
+		});
 		$(this.getElementByXid("showMenuPopOverBtn"))[event.to === 0 || event.to === 1 ? 'show' : 'hide']();
 		$(this.getElementByXid("manageGroupBtn"))[(event.to === 1 && (IM.getCurrentInfo().CurrentFunRole != 3)) ? 'show' : 'hide']();
 	};
 
-	Model.prototype.addNewDialogs = function(data, dialogs) {
-		var rows = [], i, dialog, person;
-		var row = data.getFirstRow();
-		var lastRow = data.getLastRow();
-		var lastRowID = lastRow && lastRow.getID();
-		var firstRowID = row && row.getID();
-		var index = getIndex(firstRowID, dialogs);
-		if (index === 0) {
-			index = getIndex(lastRowID, dialogs);
-			for (i = index + 1; i < dialogs.length; i++) {
-				dialog = dialogs[i];
-				this.dialogs[dialog.peer.peer.id] = dialog;
-				person = dialog.peer.peer.type === "user" ? IM.getPersonByUID(dialog.peer.peer.id) : {};
-				rows.push({
-					fID : dialog.peer.peer.id,
-					fType : dialog.peer.peer.type,
-					fNickName : dialog.peer.peer.type === "user" ? (person.name ? person.name : dialog.peer.title) : dialog.peer.title,
-					fCounter : dialog.counter,
-					fImg : dialog.peer.peer.type === "user" ? person.avatar : dialog.peer.avatar ? dialog.peer.avatar : IM.getGroupDefaultIcon(),
-					fLatestChat : SuperInput.emojiParse(Utils.getLatestChat(dialog)),
-					fLatestChatDate : Utils.getDate(dialog.date)
-				});
-			}
-			data.loadData(rows, true);
+	Model.prototype.getRowCallback = function(item, row) {
+		var person = item.peer.peer.type === "user" ? IM.getPersonByUID(item.peer.peer.id) : {};
+		var nickName = item.peer.peer.type === "user" ? person.name || item.peer.title : item.peer.title;
+		var img = item.peer.peer.type === "user" ? person.avatar : item.peer.avatar ? item.peer.avatar : IM.getGroupDefaultIcon();
+		if (row) {
+			row.val('fID', item.peer.peer.id);
+			row.val('fType', item.peer.peer.type);
+			row.val('fNickName', nickName);
+			row.val('fCounter', item.counter);
+			row.val('fImg', img);
+			row.val('fLatestChat', SuperInput.emojiParse(Utils.getLatestChat(item)));
+			row.val('fLatestChatDate', Utils.getDate(item.date));
 		} else {
-			for (i = 0; i < index; i++) {
-				dialog = dialogs[i];
-				this.dialogs[dialog.peer.peer.id] = dialog;
-				person = dialog.peer.peer.type === "user" ? IM.getPersonByUID(dialog.peer.peer.id) : {};
-				rows.push({
-					fID : dialog.peer.peer.id,
-					fType : dialog.peer.peer.type,
-					fNickName : dialog.peer.peer.type === "user" ? (person.name ? person.name : dialog.peer.title) : dialog.peer.title,
-					fCounter : dialog.counter,
-					fImg : dialog.peer.peer.type === "user" ? person.avatar : dialog.peer.avatar ? dialog.peer.avatar : IM.getGroupDefaultIcon(),
-					fLatestChat : SuperInput.emojiParse(Utils.getLatestChat(dialog)),
-					fLatestChatDate : Utils.getDate(dialog.date)
-				});
-			}
-			data.loadData(rows, true, null, 0);
+			row = {
+				fID : item.peer.peer.id,
+				fType : item.peer.peer.type,
+				fNickName : nickName,
+				fCounter : item.counter,
+				fImg : item.peer.peer.type === "user" ? person.avatar : item.peer.avatar ? item.peer.avatar : IM.getGroupDefaultIcon(),
+				fLatestChat : SuperInput.emojiParse(Utils.getLatestChat(item)),
+				fLatestChatDate : Utils.getDate(item.date)
+			};
 		}
+		return row;
 	};
 
-	Model.prototype.sortData = function(data, dialogs) {
-		var allRows = data.datas.get(), i, dialog, person;
-		for (i = 0; i < dialogs.length; i++) {
-			dialog = dialogs[i];
-			this.dialogs[dialog.peer.peer.id] = dialog;
-			person = dialog.peer.peer.type === "user" ? IM.getPersonByUID(dialog.peer.peer.id) : {};
-			if (dialogs[i].peer.peer.id == allRows[i].getID()) {
-				allRows[i].val('fID', dialog.peer.peer.id);
-				allRows[i].val('fType', dialog.peer.peer.type);
-				allRows[i].val('fNickName', dialog.peer.peer.type === "user" ? (person.name ? person.name : dialog.peer.title) : dialog.peer.title);
-				allRows[i].val('fCounter', dialog.counter);
-				allRows[i].val('fImg', dialog.peer.peer.type === "user" ? person.avatar : dialog.peer.avatar ? dialog.peer.avatar : IM.getGroupDefaultIcon());
-				allRows[i].val('fLatestChat', SuperInput.emojiParse(Utils.getLatestChat(dialog)));
-				allRows[i].val('fLatestChatDate', Utils.getDate(dialog.date));
-			} else {
-				var row = data.find([ "fID" ], [ dialogs[i].peer.peer.id ]);
-				if (row && row.length > 0) {
-					row[0].val('fID', dialog.peer.peer.id);
-					row[0].val('fType', dialog.peer.peer.type);
-					row[0].val('fNickName', dialog.peer.peer.type === "user" ? (person.name ? person.name : dialog.peer.title) : dialog.peer.title);
-					row[0].val('fCounter', dialog.counter);
-					row[0].val('fImg', dialog.peer.peer.type === "user" ? person.avatar : dialog.peer.avatar ? dialog.peer.avatar : IM.getGroupDefaultIcon());
-					row[0].val('fLatestChat', SuperInput.emojiParse(Utils.getLatestChat(dialog)));
-					row[0].val('fLatestChatDate', Utils.getDate(dialog.date));
-					data.moveRowTo(row[0], allRows[i]);
-				}
-			}
-		}
+	Model.prototype.loadDialogs = function() {
+		var self = this;
+		// var showNotification = false;
+		IM.bindDialogs(function(dialogs) {
+			if(self.loadDialogsTimeoutHandle) 
+			window.clearTimeout(self.loadDialogsTimeoutHandle);
+			self.loadDialogsTimeoutHandle = setTimeout(function(){
+				self.loadDialogsTimeoutHandle = null;
+				var data = self.comp("dialogData");
+				Utils.loadData(data, dialogs, self.getRowCallback);
+				var rows = data.toJson({
+					format : 'simple'
+				});
+				store.set("wex5Chat_dialogData", rows.rows);
+			}, 500);
+		});
 	};
 
 	Model.prototype.initEvent = function() {
 		var self = this;
+		
+		//hcr 添加推送相关, 当前先不验证用户名和密码, 代码逻辑有点不对： 登录在这里做，但退出在wex5的退出中实现
+		Push.init(IM.getCurrentPersonID(), null);
+
+		//hcr 点推送通知时，打开相应的会话
+		Push.on("onMessage", function(event){
+			if (event.message.e && event.message.e.peerId && event.message.e.peerType){
+				var id = event.message.e.peerId * 1;
+				var type = (event.message.e.peerType==1)? "user" : "group";
+				justep.Shell.fireEvent("onSendMessagePage", {id: id, type: type});					
+			}
+		});
+		
 		window.addEventListener("online", function() {
 			self.offline.set(false);
 		}, true);
 		window.addEventListener("offline", function() {
 			self.offline.set(true);
 		}, true);
-		IM.bindDialogs(function(dialogs) {
-			var data = self.comp("dialogData"), i, dialog, person;
-			var dataCount = data.getCount();
-			var rows = [];
-			self.dialogs = {};
-			if (dialogs) {
-				if (dataCount > 0) {
-					rows = [];
-					data.each(function(params) {
-						var row = params.row;
-						var isExist = isIn(dialogs, row.getID());
-						if (!isExist)
-							rows.push(row);
-					});
-					if (rows.length > 0) {
-						for (i = 0; i < rows.length; i++) {
-							data.remove(rows[i]);
-						}
-					}
-					if (data.count() != dialogs.length) {
-						self.addNewDialogs(data, dialogs);
-					}
-					if (data.count() == dialogs.length) {
-						self.sortData(data, dialogs);
-					}
-					rows = data.toJson({
-						format : 'simple'
-					});
-				} else {
-					for (i = 0; i < dialogs.length; i++) {
-						dialog = dialogs[i];
-						self.dialogs[dialog.peer.peer.id] = dialog;
-						person = dialog.peer.peer.type === "user" ? IM.getPersonByUID(dialog.peer.peer.id) : {};
-						rows.push({
-							fID : dialog.peer.peer.id,
-							fType : dialog.peer.peer.type,
-							fNickName : dialog.peer.peer.type === "user" ? (person.name ? person.name : dialog.peer.title) : dialog.peer.title,
-							fCounter : dialog.counter,
-							fImg : dialog.peer.peer.type === "user" ? person.avatar : dialog.peer.avatar ? dialog.peer.avatar : IM.getGroupDefaultIcon(),
-							fLatestChat : SuperInput.emojiParse(Utils.getLatestChat(dialog)),
-							fLatestChatDate : Utils.getDate(dialog.date)
-						});
-					}
-					self.comp("dialogData").loadData({
-						rows : rows
-					});
-				}
-				store.set("chat_dialogData", rows);
-			}
-			self.comp("popOver").hide();
-		});
+		this.loadDialogs();
 	};
-	
+
 	Model.prototype.personalBtnClick = function(event) {
-		if(this.actorReadyOK.get()){
+		if (this.loginActorDfd.state() === "resolved") {
 			var uid = IM.getCurrentPerson().uid;
 			if (uid)
 				justep.Shell.showPage("personal");
 		}
 	};
-	
+
 	return Model;
 });

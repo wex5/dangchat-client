@@ -16,6 +16,7 @@ define(function(require) {
 		this.timer = null;
 		this.i = 0;
 		this.offline = justep.Bind.observable(false);
+		this.loginActorDfd;
 	};
 	
 	Model.prototype.getMessageUrl = function(){
@@ -42,13 +43,11 @@ define(function(require) {
 			});
 		}
 		store.set("chat_uid", cUid);
-
-		var context = this.getContext();
-		IM.notification(context, cUid);
-
-		IM.loginActor().done(function() {
+		
+		this.loginActorDfd = IM.loginActor();
+		this.loginActorDfd.done(function() {
+			justep.Shell.fireEvent('actorLongined');
 			self.initEvent();
-			self.comp('contactsContainer').load();
 			var uid = IM.getCurrentPerson().uid;
 			$(document).on('resume', function() {
 				IM.updateClientState("-1,"+uid+",1");
@@ -58,98 +57,51 @@ define(function(require) {
 			});
 		});
 	};
-	var getIndex = function(id, dialogs) {
-		var index = -1;
-		$.each(dialogs, function(i, v) {
-			if (v.peer.peer.id === id) {
-				index = i;
-				return false;
-			}
+	
+	Model.prototype.getRowCallback = function(item,row) {
+		var person = item.peer.peer.type === "user" ? IM.getPersonByUID(item.peer.peer.id) : {};
+		var nickName = item.peer.peer.type === "user" ? person.name || item.peer.title : item.peer.title;
+		var img = item.peer.peer.type === "user" ? person.avatar : item.peer.avatar ? item.peer.avatar : IM.getGroupDefaultIcon();
+		if(row){
+			row.val('fID', item.peer.peer.id);
+			row.val('fType', item.peer.peer.type);
+			row.val('fNickName', nickName);
+			row.val('fCounter', item.counter);
+			row.val('fImg', img);
+			row.val('fLatestChat', SuperInput.emojiParse(Utils.getLatestChat(item)));
+			row.val('fLatestChatDate', Utils.getDate(item.date));
+		}else{
+			row = {
+				fID : item.peer.peer.id,
+				fType : item.peer.peer.type,
+				fNickName : nickName,
+				fCounter : item.counter,
+				fImg : item.peer.peer.type === "user" ? person.avatar : item.peer.avatar ? item.peer.avatar : IM.getGroupDefaultIcon(),
+				fLatestChat : SuperInput.emojiParse(Utils.getLatestChat(item)),
+				fLatestChatDate : Utils.getDate(item.date)
+			};
+		}
+		return row;
+	};
+	
+	Model.prototype.loadDialogs = function() {
+		var self = this;
+		// var showNotification = false;
+		IM.bindDialogs(function(dialogs) {
+			if(self.loadDialogsTimeoutHandle) 
+			window.clearTimeout(self.loadDialogsTimeoutHandle);
+			self.loadDialogsTimeoutHandle = setTimeout(function(){
+				self.loadDialogsTimeoutHandle = null;
+				var data = self.comp("dialogData");
+				Utils.loadData(data, dialogs, self.getRowCallback);
+				var rows = data.toJson({
+					format : 'simple'
+				});
+				store.set("chat_dialogData", rows.rows);
+			}, 500);
 		});
-		return index;
 	};
-	var isIn = function(dialogs, id) {
-		var dialogsID = [];
-		for (var i = 0; i < dialogs.length; i++) {
-			dialogsID.push(dialogs[i].peer.peer.id);
-		}
-		if (dialogsID.indexOf(id) >= 0) {
-			return true;
-		} else {
-			return false;
-		}
-	};
-	Model.prototype.addNewDialogs = function(data, dialogs) {
-		var rows = [], i, dialog, person;
-		var row = data.getFirstRow();
-		var lastRow = data.getLastRow();
-		var lastRowID = lastRow && lastRow.getID();
-		var firstRowID = row && row.getID();
-		var index = getIndex(firstRowID, dialogs);
-		if (index === 0) {
-			index = getIndex(lastRowID, dialogs);
-			for (i = index + 1; i < dialogs.length; i++) {
-				dialog = dialogs[i];
-				this.dialogs[dialog.peer.peer.id] = dialog;
-				person = dialog.peer.peer.type === "user" ? IM.getPersonByUID(dialog.peer.peer.id) : {};
-				rows.push({
-					fID : dialog.peer.peer.id,
-					fType : dialog.peer.peer.type,
-					fNickName : dialog.peer.peer.type === "user" ? person.name : dialog.peer.title,
-					fCounter : dialog.counter,
-					fImg : dialog.peer.peer.type === "user" ? person.avatar : dialog.peer.avatar ? dialog.peer.avatar : IM.getGroupDefaultIcon(),
-					fLatestChat : SuperInput.emojiParse(Utils.getLatestChat(dialog)),
-					fLatestChatDate : Utils.getDate(dialog.date)
-				});
-			}
-			data.loadData(rows, true);
-		} else {
-			for (i = 0; i < index; i++) {
-				dialog = dialogs[i];
-				this.dialogs[dialog.peer.peer.id] = dialog;
-				person = dialog.peer.peer.type === "user" ? IM.getPersonByUID(dialog.peer.peer.id) : {};
-				rows.push({
-					fID : dialog.peer.peer.id,
-					fType : dialog.peer.peer.type,
-					fNickName : dialog.peer.peer.type === "user" ? person.name : dialog.peer.title,
-					fCounter : dialog.counter,
-					fImg : dialog.peer.peer.type === "user" ? person.avatar : dialog.peer.avatar ? dialog.peer.avatar : IM.getGroupDefaultIcon(),
-					fLatestChat : SuperInput.emojiParse(Utils.getLatestChat(dialog)),
-					fLatestChatDate : Utils.getDate(dialog.date)
-				});
-			}
-			data.loadData(rows, true, null, 0);
-		}
-	};
-	Model.prototype.sortData = function(data, dialogs) {
-		var allRows = data.datas.get(), i, dialog, person;
-		for (i = 0; i < dialogs.length; i++) {
-			dialog = dialogs[i];
-			this.dialogs[dialog.peer.peer.id] = dialog;
-			person = dialog.peer.peer.type === "user" ? IM.getPersonByUID(dialog.peer.peer.id) : {};
-			if (dialogs[i].peer.peer.id == allRows[i].getID()) {
-				allRows[i].val('fID', dialog.peer.peer.id);
-				allRows[i].val('fType', dialog.peer.peer.type);
-				allRows[i].val('fNickName', dialog.peer.peer.type === "user" ? person.name : dialog.peer.title);
-				allRows[i].val('fCounter', dialog.counter);
-				allRows[i].val('fImg', dialog.peer.peer.type === "user" ? person.avatar : dialog.peer.avatar ? dialog.peer.avatar : IM.getGroupDefaultIcon());
-				allRows[i].val('fLatestChat', SuperInput.emojiParse(Utils.getLatestChat(dialog)));
-				allRows[i].val('fLatestChatDate', Utils.getDate(dialog.date));
-			} else {
-				var row = data.find([ "fID" ], [ dialogs[i].peer.peer.id ]);
-				if (row && row.length > 0) {
-					row[0].val('fID', dialog.peer.peer.id);
-					row[0].val('fType', dialog.peer.peer.type);
-					row[0].val('fNickName', dialog.peer.peer.type === "user" ? person.name : dialog.peer.title);
-					row[0].val('fCounter', dialog.counter);
-					row[0].val('fImg', dialog.peer.peer.type === "user" ? person.avatar : dialog.peer.avatar ? dialog.peer.avatar : IM.getGroupDefaultIcon());
-					row[0].val('fLatestChat', SuperInput.emojiParse(Utils.getLatestChat(dialog)));
-					row[0].val('fLatestChatDate', Utils.getDate(dialog.date));
-					data.moveRowTo(row[0], allRows[i]);
-				}
-			}
-		}
-	};
+	
 	Model.prototype.initEvent = function() {
 		var self = this;
 		window.addEventListener("online", function() {
@@ -158,63 +110,7 @@ define(function(require) {
 		window.addEventListener("offline", function() {
 			self.offline.set(true);
 		}, true);
-		IM.bindDialogs(function(dialogs) {
-			var data = self.comp("dialogData"), i, dialog, person;
-			var dataCount = data.getCount();
-			var rows = [];
-			self.dialogs = {};
-			if (dialogs) {
-				if (dataCount > 0) {
-					rows = [];
-					data.each(function(params) {
-						var row = params.row;
-						var isExist = isIn(dialogs, row.getID());
-						if (!isExist)
-							rows.push(row);
-					});
-					if (rows.length > 0) {
-						for (i = 0; i < rows.length; i++) {
-							data.remove(rows[i]);
-						}
-					}
-					if (data.count() != dialogs.length) {
-						self.addNewDialogs(data, dialogs);
-					}
-					if (data.count() == dialogs.length) {
-						self.sortData(data, dialogs);
-					}
-					rows = data.toJson({
-						format : 'simple'
-					});
-				} else {
-					for (i = 0; i < dialogs.length; i++) {
-						dialog = dialogs[i];
-						self.dialogs[dialog.peer.peer.id] = dialog;
-						person = dialog.peer.peer.type === "user" ? IM.getPersonByUID(dialog.peer.peer.id) : {};
-						rows.push({
-							fID : dialog.peer.peer.id,
-							fType : dialog.peer.peer.type,
-							fNickName : dialog.peer.peer.type === "user" ? person.name : dialog.peer.title,
-							fCounter : dialog.counter,
-							fImg : dialog.peer.peer.type === "user" ? person.avatar : dialog.peer.avatar ? dialog.peer.avatar : IM.getGroupDefaultIcon(),
-							fLatestChat : SuperInput.emojiParse(Utils.getLatestChat(dialog)),
-							fLatestChatDate : Utils.getDate(dialog.date)
-						});
-					}
-					self.comp("dialogData").loadData({
-						rows : rows
-					});
-				}
-				store.set("chat_dialogData", rows);
-			}
-		});
-	};
-
-	Model.prototype.getDialog = function(id) {
-		var result = this.dialogs[id];
-		if (!result)
-			throw "根据id:" + id + "查找会话出错！";
-		return result;
+		this.loadDialogs();
 	};
 
 	Model.prototype.modelModelConstruct = function(event) {
@@ -334,7 +230,7 @@ define(function(require) {
 
 	Model.prototype.deleteChatBtnClick = function(event) {
 		var id = this.comp("contactsMenu")._id;
-		var peer = this.getDialog(id).peer.peer;
+		var peer = IM.getUserPeer(id);
 		justep.Util.confirm("删除该联系人的对话", function() {
 			IM.deleteChat(peer);
 		});
@@ -342,7 +238,7 @@ define(function(require) {
 
 	Model.prototype.deleteGroupChatBtnClick = function(event) {
 		var id = this.comp("groupMenu")._id;
-		var peer = this.getDialog(id).peer.peer;
+		var peer = IM.getGroupPeer(id);
 		justep.Util.confirm("删除该组的对话?", function() {
 			IM.deleteChat(peer);
 		});
@@ -350,7 +246,7 @@ define(function(require) {
 
 	Model.prototype.leaveGroupBtnClick = function(event) {
 		var id = this.comp("groupMenu")._id;
-		var peer = this.getDialog(id).peer.peer;
+		var peer = IM.getGroupPeer(id);
 		justep.Util.confirm("删除并退出该群?", function() {
 			IM.leaveGroup(peer.id).then(function() {
 				IM.deleteChat(peer);
@@ -368,9 +264,11 @@ define(function(require) {
 	};
 
 	Model.prototype.personalBtnClick = function(event) {
-		var uid = IM.getCurrentPerson().uid; 
-		if (uid)
-			justep.Shell.showPage("personal");
+		if (this.loginActorDfd.state() === "resolved") {
+			var uid = IM.getCurrentPerson().uid; 
+			if (uid)
+				justep.Shell.showPage("personal");
+		}
 	};
 
 	Model.prototype.contactsMenuHideClick = function(event) {
@@ -403,11 +301,14 @@ define(function(require) {
 		}
 	};
 
-	Model.prototype.workBtnClick = function(event) {
-		this.comp("workContainer").load();
-	};
-
 	Model.prototype.pagesActiveChanged = function(event) {
+		var self = this;
+		var i = event.to;
+		this.loginActorDfd.then(function(){
+			if(i===1){
+				self.comp('contactsContainer').load();
+			}
+		});
 		$(this.getElementByXid("showMenuPopOverBtn"))[event.to === 0 || event.to === 1 ? 'show' : 'hide']();
 	};
 	// 加载更多会话

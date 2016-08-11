@@ -16,6 +16,7 @@ define(function(require) {
 
 			}
 		};
+		this.loginDtd = this.getLoadedDeferred();
 	};
 
 	Model.prototype.createShellImpl = function() {
@@ -28,6 +29,9 @@ define(function(require) {
 		shellImpl.on('onLoggedIn', this.loggedIn, this);
 		shellImpl.on('onShowLoginDialog', this.showLoginDialog, this);
 		shellImpl.on('toChooseOrg', this.toChooseOrg, this);
+		shellImpl.on('actorLongined',function(){
+			this.loginDtd.resolve();
+		},this);
 	};
 
 	Model.prototype.createIMImpl = function() {
