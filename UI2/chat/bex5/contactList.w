@@ -3,8 +3,6 @@
 <div xmlns="http://www.w3.org/1999/xhtml" component="$UI/system/components/justep/window/window" sysParam="false">  
   <div component="$UI/system/components/justep/model/model" xid="model" style="height:auto;top:284px;left:177px;"
     onLoad="modelLoad"/>  
-  <span component="$UI/system/components/justep/windowReceiver/windowReceiver"
-    xid="windowReceiver1"/>
   <div component="$UI/system/components/justep/panel/panel" class="x-panel x-full"
     xid="panel1"> 
     <div class="x-panel-top" xid="top1"> 
@@ -105,7 +103,7 @@
         </div> 
       </div> 
     </div>  
-    <div xid="div1" style="position:absolute;bottom:0px;width:100%;" bind-if="$model.isFromDlg.get()">
+    <div xid="div1" style="position:absolute;bottom:0px;width:100%;display:none;" bind-visible="$model.isFromDlg.get()">
       <a component="$UI/system/components/justep/button/button" class="btn btn-default"
         xid="sendBtn" style="background-color: rgb(75,115,164);width:100%;" label="确定"
         onClick="sendBtnClick"> 

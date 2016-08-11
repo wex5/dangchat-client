@@ -23,5 +23,8 @@
    <img xid="image1" bind-visible=" $object.val('fImg')" onerror="this.src='../base/img/person.png'"  xui:update-mode="merge"/>
    <div xid="div13" bind-click="addMemberBtnClick"  xui:update-mode="merge"/>
    <a xid="leaveGroupBtn" style="width:100%;"  xui:update-mode="merge"/>
+<xu:modifications>
+  <xu:remove select="//*[@xid='div111']/@bind-if"/>
+</xu:modifications>
 
 </div>

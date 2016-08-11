@@ -3,7 +3,7 @@
 <div xmlns="http://www.w3.org/1999/xhtml" class="main13" component="$UI/system/components/justep/window/window"
   design="device:mobile;" xid="window" sysParam="false">  
   <div component="$UI/system/components/justep/model/model" xid="model" style="height:auto;left:216px;top:48px;"
-    onLoad="modelLoad" onModelConstruct="modelModelConstruct" onParamsReceive="modelParamsReceive"> 
+    onLoad="modelLoad" onModelConstruct="modelModelConstruct" onParamsReceive="modelParamsReceive" onInactive="modelInactive"> 
     <div component="$UI/system/components/justep/data/data" autoLoad="true"
       xid="contactsData" idColumn="fID" limit="-1" confirmDelete="false"> 
       <column label="ID" name="fID" type="String" xid="xid1"/>  
@@ -35,7 +35,7 @@
         </div>  
         <div class="x-titlebar-title" xid="title1"/>  
         <a component="$UI/system/components/justep/button/button" class="btn btn-link"
-          label="确定" xid="button2" style="height:100%;padding-top:10px;" onClick="createGroupBtnClick"> 
+          label="确定" style="height:100%;padding-top:10px;" onClick="createGroupBtnClick" xid="createBtn"> 
           <i xid="i4"/>  
           <span xid="span11">确定</span> 
         </a> 

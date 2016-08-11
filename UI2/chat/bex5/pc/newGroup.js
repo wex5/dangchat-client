@@ -44,23 +44,9 @@ define(function(require) {
 	Model.prototype.createGroupBtnClick = function(event) {
 		var title = this.comp('groupName').val();
 		var self = this;
-		if (title) {
-			IM.createGroup(title, null, this.userIds).then(function(peer) {
-				justep.Shell.fireEvent("onGroupSendMessagePage", {
-					id : peer.id,
-					type : peer.type
-				});
-				self.owner.close();
-			});
-		} else {
-			// justep.Util.hint("请输入群名称！");
-			var data = this.comp('contactsData');
-			if (data.count() < 3) {
-				data.each(function(params) {
-					var row = params.row;
-					title = title +'、'+row.val('fName');
-				});
-				title = IM.getCurrentPerson().name + title + '、、、';
+		if(this.createGroupState.get()){
+			this.createGroupState.set(false);
+			if (title) {
 				IM.createGroup(title, null, this.userIds).then(function(peer) {
 					justep.Shell.fireEvent("onGroupSendMessagePage", {
 						id : peer.id,
@@ -69,23 +55,42 @@ define(function(require) {
 					self.owner.close();
 				});
 			} else {
-				var index = 1;
-				data.each(function(params) {
-					if (index < 3) {
+				// justep.Util.hint("请输入群名称！");
+				var data = this.comp('contactsData');
+				if (data.count() < 3) {
+					data.each(function(params) {
 						var row = params.row;
-						title = title + '、' + row.val('fName');
-					}
-					index++;
-				});
-				title = IM.getCurrentPerson().name + title + '、、、';
-				IM.createGroup(title, null, this.userIds).then(function(peer) {
-					justep.Shell.fireEvent("onGroupSendMessagePage", {
-						id : peer.id,
-						type : peer.type
+						title = title +'、'+row.val('fName');
 					});
-					self.owner.close();
-				});
+					title = IM.getCurrentPerson().name + title + '...';
+					IM.createGroup(title, null, this.userIds).then(function(peer) {
+						justep.Shell.fireEvent("onGroupSendMessagePage", {
+							id : peer.id,
+							type : peer.type
+						});
+						self.owner.close();
+					});
+				} else {
+					var index = 1;
+					data.each(function(params) {
+						if (index < 3) {
+							var row = params.row;
+							title = title + '、' + row.val('fName');
+						}
+						index++;
+					});
+					title = IM.getCurrentPerson().name + title + '...';
+					IM.createGroup(title, null, this.userIds).then(function(peer) {
+						justep.Shell.fireEvent("onGroupSendMessagePage", {
+							id : peer.id,
+							type : peer.type
+						});
+						self.owner.close();
+					});
+				}
 			}
+		}else{
+			justep.Util.hint("正在创建群组请稍后...");
 		}
 	};
 	Model.prototype.modelParamsReceive = function(event) {

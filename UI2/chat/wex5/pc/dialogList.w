@@ -85,10 +85,10 @@
     <div class="x-panel-content  x-scroll-view" xid="content1" style="overflow-x: hidden; bottom: 0px;"
       _xid="C71BB4D25EC000015A973101183B1FDA"> 
       <div class="x-scroll" component="$UI/system/components/justep/scrollView/scrollView"
-        xid="scrollView1" onPullUp="scrollViewPullUp" autoAppend="false"> 
+        xid="scrollView1" onPullUp="scrollViewPullUp" autoAppend="false" style="overflow-x: hidden;"> 
         <div class="x-scroll-content" xid="div6"> 
           <div class="x-list x-cards" component="$UI/system/components/justep/list/list"
-            data="dialogData" xid="list1" filter="$model.dialogFilter($row)"> 
+            data="dialogData" xid="list1" filter="$model.dialogFilter($row)" limit="20"> 
             <ul class="x-list-template list-group" xid="listTemplateUl1"> 
               <li bind-click="msgLIClick" class="list-group-item" xid="li1"
                 bind-css="{'x-currentRow':val('fID')===$model.currentDialogID.get()}"

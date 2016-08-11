@@ -217,7 +217,7 @@ define(function(require) {
 		});
 		return deferred.promise();
 	};
-	
+
 	var IMBizImpl = IMImpl.extend({
 		loginBiz : function() {
 			var self = this;
@@ -370,7 +370,7 @@ define(function(require) {
 			biz.Request.sendBizRequest(options);
 			return deferred.promise();
 		},
-		getSearchDoc : function(option){
+		getSearchDoc : function(option) {
 			var deferred = $.Deferred();
 			var params = new biz.Request.ActionParam();
 			params.setInteger("currentUserId", option.currentUserId);
@@ -412,8 +412,21 @@ define(function(require) {
 			});
 			return deferred.promise();
 		},
-		notification : function(context,cUid){
+		notification : function(context, cUid) {
 			biz.Push.init(context, cUid);
+		},
+		pushNotification : function() {
+			// hcr 点推送通知时，打开相应的会话
+			biz.Push.on("onMessage", function(event) {
+				if (event.message.e && event.message.e.peerId && event.message.e.peerType) {
+					var id = event.message.e.peerId * 1;
+					var type = (event.message.e.peerType == 1) ? "user" : "group";
+					justep.Shell.fireEvent("onSendMessagePage", {
+						id : id,
+						type : type
+					});
+				}
+			});
 		}
 	});
 

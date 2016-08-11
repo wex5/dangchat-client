@@ -50,9 +50,12 @@ define(function(require) {
 					});
 				}
 			}
-			$.when(self.getDepts(), self.loadPerson()).done(function(depts, persons) {
+			$.when(IM.getOrgDepts(self.currentPersonID.get()), IM.getOrgPersons(self.currentPersonID.get())).done(function(depts, persons) {
+				persons = ChineseFirstPY(persons);
+				persons = addCheckRow(persons);
 				persons = orderBySequence(persons);
 				persons = addType(persons);
+				depts = ChineseFirstPY(depts);
 				depts = orderBySequence(depts);
 				var map = {};
 				for (var i = 0; i < persons.length; i++) {
@@ -72,8 +75,12 @@ define(function(require) {
 									map[depts[j].sFID] = {
 										name : depts[j].sFName.substring(1, depts[j].sFName.length),
 										psm : [],
+										psms : []
 									};
-								map[depts[j].sFID].psm.push(persons[i]);
+								if(map[depts[j].sFID].psms.indexOf(persons[i].sID)===-1){
+									map[depts[j].sFID].psm.push(persons[i]);
+									map[depts[j].sFID].psms.push(persons[i].sID);
+								}
 							}
 						}
 					}
@@ -135,42 +142,7 @@ define(function(require) {
 			return null;
 		}
 	};
-	Model.prototype.loadPerson = function(event) {
-		var deferred = $.Deferred();
-		justep.Baas.sendRequest({
-			"url" : "/org/loadPerson",
-			"action" : "loadPerson",
-			"async" : false,
-			"params" : {
-				"sPersonID" : IM.getCurrentPerson().id
-			},
-			"success" : function(data) {
-				var persons = data.persons;
-				persons = ChineseFirstPY(persons);
-				persons = addCheckRow(persons);
-				deferred.resolve(persons);
-			}
-		});
-		return deferred.promise();
-	};
 
-	Model.prototype.getDepts = function(event) {
-		var deferred = $.Deferred();
-		justep.Baas.sendRequest({
-			"url" : "/org/loadPerson",
-			"action" : "getDepts",
-			"async" : false,
-			"params" : {
-				"sPersonID" : IM.getCurrentPerson().id
-			},
-			"success" : function(data) {
-				var depts = data.depts;
-				depts = ChineseFirstPY(depts);
-				deferred.resolve(depts);
-			}
-		});
-		return deferred.promise();
-	};
 	var ChineseFirstPY = function(rows) {
 		$.each(rows, function(i, v) {
 			v.sChineseFirstPY = ChinesePY.makeFirstPY(v.sChineseFirstPY).toLocaleUpperCase();

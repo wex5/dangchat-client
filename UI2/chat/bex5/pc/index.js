@@ -3,7 +3,7 @@ define(function(require) {
 	var justep = require("$UI/system/lib/justep");
 	var IMBizImpl = require("../js/im.biz.impl");
 	var electronApp = require("../../lib/electron-app");
-
+	var IM = require("../../base/js/im");
 	var Model = function() {
 		this.callParent();
 		this._cfg.pageMappings = {
@@ -27,7 +27,9 @@ define(function(require) {
 	};
 
 	Model.prototype.toContact = function() {
-		justep.Shell.showPage("contact");
+		IM.loginActor().done(function(){
+			justep.Shell.showPage("contact");
+		});
 	};
 
 	Model.prototype.toOrgTree = function() {

@@ -6,6 +6,7 @@ define(function(require) {
 	var Model = function() {
 		this.callParent();
 		this.userIds = [];
+		this.createGroupState = justep.Bind.observable(true);
 	};
 
 	Model.prototype.modelLoad = function(event) {
@@ -17,50 +18,55 @@ define(function(require) {
 		// if (!this.createGroupState) { }
 		var self = this;
 		var title = this.comp('groupName').val();
-		if (title) {
-			//this.createGroupState = true;
-			IM.createGroup(title, null, this.userIds).then(function(peer) {
-				justep.Shell.fireEvent("onSendMessagePage", {
-					id : peer.id,
-					type : peer.type
-				});
-				//self.createGroupState = false;
-			}, function(e) {
-				self.createGroupState = false;
-				justep.Util.hint("创建失败！");
-			});
-		} else {
-			//justep.Util.hint("请输入群名称！");
-			var data = this.comp('contactsData');
-			if (data.count() < 3) {
-				data.each(function(params) {
-					var row = params.row;
-					title = title + '、' + row.val('fName');
-				});
-				title = IM.getCurrentPerson().name + title + '...';
+		if(this.createGroupState.get()){
+			this.createGroupState.set(false);
+			if (title) {
+				//this.createGroupState = true;
 				IM.createGroup(title, null, this.userIds).then(function(peer) {
 					justep.Shell.fireEvent("onSendMessagePage", {
 						id : peer.id,
 						type : peer.type
 					});
+					//self.createGroupState = false;
+				}, function(e) {
+					self.createGroupState = false;
+					justep.Util.hint("创建失败！");
 				});
 			} else {
-				var index = 1;
-				data.each(function(params) {
-					if (index < 3) {
+				//justep.Util.hint("请输入群名称！");
+				var data = this.comp('contactsData');
+				if (data.count() < 3) {
+					data.each(function(params) {
 						var row = params.row;
 						title = title + '、' + row.val('fName');
-					}
-					index++;
-				});
-				title = IM.getCurrentPerson().name + title + '...';
-				IM.createGroup(title, null, this.userIds).then(function(peer) {
-					justep.Shell.fireEvent("onSendMessagePage", {
-						id : peer.id,
-						type : peer.type
 					});
-				});
+					title = IM.getCurrentPerson().name + title + '...';
+					IM.createGroup(title, null, this.userIds).then(function(peer) {
+						justep.Shell.fireEvent("onSendMessagePage", {
+							id : peer.id,
+							type : peer.type
+						});
+					});
+				} else {
+					var index = 1;
+					data.each(function(params) {
+						if (index < 3) {
+							var row = params.row;
+							title = title + '、' + row.val('fName');
+						}
+						index++;
+					});
+					title = IM.getCurrentPerson().name + title + '...';
+					IM.createGroup(title, null, this.userIds).then(function(peer) {
+						justep.Shell.fireEvent("onSendMessagePage", {
+							id : peer.id,
+							type : peer.type
+						});
+					});
+				}
 			}
+		}else{
+			justep.Util.hint("正在创建群组请稍后...");
 		}
 	};
 
@@ -102,6 +108,10 @@ define(function(require) {
 				$(self.comp("newfirend").domNode).hide();
 			}
 		});
+	};
+
+	Model.prototype.modelInactive = function(event){
+		this.createGroupState.set(true);
 	};
 
 	return Model;

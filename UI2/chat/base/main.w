@@ -122,7 +122,7 @@
             xid="scrollView1" onPullUp="scrollViewPullUp" autoAppend="false"> 
             <div class="x-scroll-content" xid="div10"> 
               <div class="x-list" component="$UI/system/components/justep/list/list"
-                xid="list1" data="dialogData"> 
+                xid="list1" data="dialogData" limit="20"> 
                 <ul class="x-list-template list-group" xid="listTemplateUl1"> 
                   <li class="list-group-item" xid="li1" bind-touchstart="touchStart"
                     bind-click="msgLIClick" bind-touchend="touchEnd" bind-touchcancel="touchCancel"

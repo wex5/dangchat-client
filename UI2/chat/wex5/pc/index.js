@@ -4,6 +4,8 @@ define(function(require) {
 	var WindowDialog = require("$UI/system/components/justep/windowDialog/windowDialog");
 	var IMWex5Impl = require("../js/im.wex5.impl");
 	var electronApp = require("../../lib/electron-app");
+	var IM = require("../../base/js/im");
+	
 
 	var Model = function() {
 		this.callParent();
@@ -28,7 +30,9 @@ define(function(require) {
 	};
 
 	Model.prototype.toContact = function() {
-		justep.Shell.showPage("contact");
+		IM.loginActor().done(function(){
+			justep.Shell.showPage("contact");
+		});
 	};
 
 	Model.prototype.toChats = function() {

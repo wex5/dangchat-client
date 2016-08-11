@@ -71,9 +71,13 @@ li:active {
 }
 
 .btn:active, .btn.active{
-	color:#2fa4e7;
+	color:#2fa4e7!important;
 }
 
 a{
+	color:#848587;
+}
+
+.btn:hover{
 	color:#848587;
 }

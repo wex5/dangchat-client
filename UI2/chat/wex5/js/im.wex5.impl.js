@@ -1,11 +1,12 @@
 define(function(require) {
 	// var $ = require("jquery");
+	var Push = require("$UI/system/lib/base/push");
 	var justep = require("$UI/system/lib/justep");
 	var IMImpl = require('../../base/js/im.impl');
 	var Person = require("../../base/js/person");
 	var store = require('$UI/system/lib/base/store');
-	var Uploader = require('$UI/system/components/justep/uploader/uploader');
-	
+	var Uploader = require('$UI/chat/wex5/js/uploader-html5');
+
 	var loginByWex5 = function(params) {
 		var ret;
 		var userParams = {};
@@ -70,33 +71,63 @@ define(function(require) {
 		store.set('work_loginData', encrypt(data, password));
 	};
 
+	var _orgPersons;
+	var _orgDepts;
+	var orgPersonsDeferred = $.Deferred();
+	var orgDeptsDeferred = $.Deferred();
 	var IMWex5Impl = IMImpl.extend({
 		loadPerson : function(persons, pid) {
 			var deferred = $.Deferred();
-			justep.Baas.sendRequest({
-				"url" : "/org/loadPerson",
-				"action" : "loadPerson",
-				"async" : false,
-				"params" : {
-					"sPersonID" : pid
-				},
-				"success" : function(data) {
-					$.each(data.persons, function(i, v) {
-						var p = {
-							id : v.sPersonID,
-							name : v.sName,
-							uid : v.sNumb,
-							avatar : getPersonAvatar(v.sPhoto),
-							nick : '',
-							phones : [],
-							about : ''
-						};
-						persons[v.sPersonID] = new Person(p);
-					});
-					deferred.resolve(persons);
-				}
+			this.getOrgPersons(pid).done(function(orgPersons) {
+				$.each(orgPersons, function(i, v) {
+					var p = {
+						id : v.sPersonID,
+						name : v.sName,
+						uid : v.sNumb,
+						avatar : getPersonAvatar(v.sPhoto),
+						nick : '',
+						phones : [],
+						about : ''
+					};
+					persons[v.sPersonID] = new Person(p);
+				});
+				deferred.resolve(persons);
 			});
 			return deferred.promise();
+		},
+		getOrgPersons : function(pid) {
+			if (!_orgPersons) {
+				justep.Baas.sendRequest({
+					"url" : "/org/loadPerson",
+					"action" : "loadPerson",
+					"async" : true,
+					"params" : {
+						"sPersonID" : pid
+					},
+					"success" : function(data) {
+						_orgPersons = data.persons;
+						orgPersonsDeferred.resolve(_orgPersons);
+					}
+				});
+			}
+			return orgPersonsDeferred.promise();
+		},
+		getOrgDepts : function(pid){
+			if (!_orgDepts) {
+				justep.Baas.sendRequest({
+					"url" : "/org/loadPerson",
+					"action" : "getDepts",
+					"async" : true,
+					"params" : {
+						"sPersonID" : pid
+					},
+					"success" : function(data) {
+						_orgDepts = data.depts;
+						orgDeptsDeferred.resolve(_orgDepts);
+					}
+				});
+			}
+			return orgDeptsDeferred.promise();
 		},
 		doLogin : function(param) {
 			return loginByWex5(param);
@@ -110,7 +141,8 @@ define(function(require) {
 				this.callParent(result);
 		},
 		doLogout : function() {
-
+			//hcr 添加推送相关
+			Push.disConnect();
 		},
 		updatePersonUid : function(uid, pid) {
 			var self = this;
@@ -118,7 +150,7 @@ define(function(require) {
 			justep.Baas.sendRequest({
 				"url" : "/org/updatePersonUid",
 				"action" : "updatePersonUid",
-				"async" : false,
+				"async" : true,
 				"params" : {
 					"uid" : uid,
 					"pid" : pid
@@ -141,6 +173,7 @@ define(function(require) {
 				requestHeader : {
 					Accept : 'application/json'
 				},
+				accept : "image/*",
 				name : name,
 				compress : true
 			});
@@ -170,14 +203,14 @@ define(function(require) {
 		},
 	});
 
-	var getPersonAvatar = function(imgFile){
-		if(imgFile){
-			return justep.Baas.BASE_URL+"/org/personAvatar/getPersonAvatar?imgFile="+imgFile;
-		}else{
+	var getPersonAvatar = function(imgFile) {
+		if (imgFile) {
+			return justep.Baas.BASE_URL + "/org/personAvatar/getPersonAvatar?imgFile=" + imgFile;
+		} else {
 			return null;
 		}
-		
+
 	};
-	
+
 	return IMWex5Impl;
 });

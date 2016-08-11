@@ -7,9 +7,6 @@ define(function(require){
 	var $ = require("jquery");
 	var funcTree = require("$UI/work/config/work-function");
 
-	//var justep = require("$UI/system/lib/justep");
-	//var biz = require('$UI/system/lib/biz');
-	//var getFuncTreeUrl = require.toUrl('$UI/demo/config/demo.function.js');
 	var Util = {
 			getFuncTree: function(){
 				var deferred = $.Deferred();

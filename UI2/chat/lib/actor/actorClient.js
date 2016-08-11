@@ -373,9 +373,9 @@ define(function(require) {
 	};
 	ActorClient.prototype.requestCodeEmail = function(email) {
 		return new Promise(function(resolve, reject){
-			this.messager.requestCodeEmail(email.trim(), function(){}, function(){});
+			this.messager.requestCodeEmail(email.trim(), resolve, reject);
 		});
-	};
+	};	
 	return {
 		promise : deferred.promise(),
 		getClient : function() {

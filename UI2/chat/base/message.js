@@ -516,11 +516,12 @@ define(function(require) {
 		var clipboardData = event.clipboardData || event.dataTransfer;
 		if (clipboardData && clipboardData.items) {
 			var item;
+			var i;
 			var types = clipboardData.types || [];
 			if (types.indexOf("text/html") != -1) {
 				return true;
 			}
-			for (var i = 0; i < types.length; i++) {
+			for (i = 0; i < types.length; i++) {
 				if (types[i] === 'Files') {
 					item = clipboardData.items[i];
 					break;
@@ -530,8 +531,16 @@ define(function(require) {
 				if (item.type.match(/^image\//i)) {
 					var blob = item.getAsFile();
 					this.showClipboardImage(blob);
-				} else if (this.curPeer)
-					IM.sendFileMessage(this.curPeer, item.getAsFile());
+				} else if (this.curPeer){
+					for(i = 0; i < clipboardData.items.length; i++ ){
+						item = clipboardData.items[i];
+						if(item.kind === 'file'&&item.type.match(/^image\//i)){
+							IM.sendClipboardPhotoMessage(this.curPeer,item.getAsFile());
+						}else{
+							IM.sendFileMessage(this.curPeer, item.getAsFile());
+						}
+					}
+				}
 				return false;
 			}
 		}
@@ -1325,18 +1334,45 @@ define(function(require) {
 		});
 	};
 
-
-
-	Model.prototype.msgListAfterRender = function(event){
-		var domNode = this.comp('msgList').$domNode;
-		setTimeout(function(){
+	Model.prototype.loadMedia = function(event){
+		function _loadMedia(element){
+			if(element.readyState < 3 && (!element.retrytimes || element.retrytimes < 3)){
+				element.retrytimes = element.retrytimes || 0;
+				element.retrytimes++;
+				element.load();
+				setTimeout(function(){
+					_loadMedia(element);
+				},element.retrytimes == 1?2000:element.retrytimes == 2?5000:5000);
+			}else if(element.readyState > 3 && element.retrytimes !== 0){
+				element.retrytimes = 0;
+			}
+		}
+		
+		var msgList = this.comp('msgList');
+		if(msgList && msgList.$domNode){
+			var domNode = msgList.$domNode;
 			var mediaLists = domNode.find('audio,video');
 			mediaLists.each(function(index,element){
-				if(element.readyState < 2){
-					element.load();
-				}
+				_loadMedia(element);
 			});
-		},500);
+		}
+	};
+	
+	Model.prototype.msgListAfterRender = function(event){
+		function debounce(fn, wait,scope) {
+			return function() {
+				var args = arguments,
+					later = function() {
+						fn.__timeout = undefined;
+						fn.apply( scope, args );
+					};
+				if(fn.__timeout ) {
+					clearTimeout(fn.__timeout);
+				}
+				fn.__timeout = setTimeout( later, wait );
+			};
+		}
+		debounce(this.loadMedia,500,this)();
 	};
 
 	return Model;

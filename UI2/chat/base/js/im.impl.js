@@ -169,6 +169,10 @@ define(function(require) {
 		loadPerson : function(persons) {
 			// 返回promise
 		},
+		getOrgPersons : function(id){
+		},
+		getOrgDepts : function(id){
+		},
 		autoLogin : function() {
 			var self = this;
 			if (needLogin())
@@ -249,6 +253,7 @@ define(function(require) {
 		loginActor : function() {
 			var self = this;
 			var deferred = $.Deferred();
+			require("res!../../lib/actor/actorClient.js");
 			require([ '../../lib/actor/actorClient' ], function(actorClient) {
 				ActorClient = actorClient;
 				ActorClient.promise.done(function(client) {
@@ -769,6 +774,9 @@ define(function(require) {
 		},
 		updateGroupShared : function(gid, groupShared){
 			return _api().editGroupAbout(gid, groupShared);
+		},
+		pushNotification : function(){
+			return _api().pushNotification();
 		}
 	});
 

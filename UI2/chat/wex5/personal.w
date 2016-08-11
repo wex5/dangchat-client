@@ -13,6 +13,7 @@
     <resource xid="resource2_9" xui:parent="window" xui:update-mode="insert" >
 <require url="css!$UI/work/common/css/pub" xid="require1_9" />
 </resource>
+    <span component="$UI/system/components/justep/windowDialog/windowDialog" forceRefreshOnOpen="true" onReceive="clipDialogReceive" src="$UI/chat/wex5/picCut/mainActivity.w" xid="clipDialog" xui:parent="window" xui:update-mode="insert" />
    <div xid="titleBar1" class="x-titlebar"  xui:update-mode="merge"/>
     <div class="photoDiv" style="width:70px;height:70px;" xid="div5" xui:parent="divAvatar" xui:update-mode="insert" >
 <span bind-text="$model.name.get();" style="line-height:70px;font-size:1.3em;" xid="span9" />
@@ -39,6 +40,18 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 修改密码</a>
 </div>
 </div>
@@ -52,6 +65,18 @@
 </div>
 <div class="setup-item" xid="div3" >
 <a component="$UI/system/components/justep/button/button" xid="aboutBtn" >
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

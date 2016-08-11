@@ -480,6 +480,21 @@ define(function(require) {
 				return IM.impl.updateGroupShared.apply(IM.impl, arguments);
 			}
 		},
+		getOrgPersons : function(){
+			if (checkImpl()) {
+				return IM.impl.getOrgPersons.apply(IM.impl, arguments);
+			}
+		},
+		getOrgDepts : function(){
+			if (checkImpl()) {
+				return IM.impl.getOrgDepts.apply(IM.impl, arguments);
+			}
+		},
+		pushNotification : function(){
+			if (checkImpl()) {
+				return IM.impl.pushNotification.apply(IM.impl, arguments);
+			}
+		},
 		call : call
 	};
 

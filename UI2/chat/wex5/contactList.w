@@ -34,7 +34,7 @@
         <ul class="x-list-template  list-group" xid="listTemplateUl1"> 
           <li xid="contact" bind-ifnot="$model.isCreateGroup.get() &amp;&amp;( val(&quot;type&quot;)=='group' ||  val(&quot;fsName&quot;)=='群组')"> 
             <div xid="div5"> 
-              <div xid="deptName" bind-if="val(&quot;fIsGroup&quot;)"> 
+              <div xid="deptName" bind-if="val(&quot;fIsGroup&quot;)" bind-click="deptNameClick"> 
                 <div xid="div6"> 
                   <div component="$UI/system/components/justep/output/output"
                     class="x-output x-title" xid="output1" bind-ref="ref(&quot;fsName&quot;)"/> 
@@ -72,7 +72,7 @@
         </ul> 
       </div> 
     </div>  
-    <div xid="div1" style="position:absolute;bottom:0px;width:100%;" bind-if="$model.isFromDlg.get()"> 
+    <div xid="div1" style="position:absolute;bottom:0px;width:100%;display:none;" bind-visible="$model.isFromDlg.get()"> 
       <a component="$UI/system/components/justep/button/button" class="btn btn-default"
         xid="sendBtn" style="width:100%;" label="确定"
         onClick="sendBtnClick"> 

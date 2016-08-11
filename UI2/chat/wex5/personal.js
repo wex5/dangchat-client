@@ -34,11 +34,11 @@ define(function(require) {
 	};
 
 	Model.prototype.changePawdBtnClick = function(event) {
-		if(justep.Browser.isPC){
+		if (justep.Browser.isPC) {
 			this.comp("windowDialog").open({
-				"src":"$UI/work/reg/changePasswordActivity.m.w"
+				"src" : "$UI/work/reg/changePasswordActivity.m.w"
 			});
-		}else{
+		} else {
 			justep.Shell.showPage("$UI/work/reg/changePasswordActivity.m.w");
 		}
 	};
@@ -46,23 +46,46 @@ define(function(require) {
 	Model.prototype.aboutBtnClick = function(event) {
 		var url = "$UI/work/aboutDD/process/about/mainActivity.w";
 		url = require.toUrl(url);
-		if(justep.Browser.isPC){
+		if (justep.Browser.isPC) {
 			this.comp("windowDialog").open({
-				"src":url
+				"src" : url
 			});
-		}else{	
+		} else {
 			justep.Shell.showPage(url);
 		}
 	};
-	
+
 	Model.prototype.init = function() {
+		var self = this;
 		var domNode = this.getElementByXid('divAvatar');
 		var avatar = this.getElementByXid('avatar');
-		var uploader = IM.bindChangeMyAvatar(justep.Baas.BASE_URL+'/org/personAvatar/personAvatar', "img", domNode);
-		uploader.on('onSuccess', function(evt) {
-			avatar.src = IM.getCurrentPerson().avatar;
+		var uploader = IM.bindChangeMyAvatar(justep.Baas.BASE_URL + '/org/personAvatar/personAvatar', "img", domNode);
+
+		uploader.on("onBefore", function(evt) {
+			if (evt.promise === null) {
+				evt.promise = $.Deferred();
+			}
+			self.comp("clipDialog").open({
+				data : {
+					file : evt.data,
+					promise : evt.promise
+				}
+			});
 		});
 
+		uploader.on('onSuccess', function(evt) {
+			avatar.src = IM.getCurrentPerson().avatar;
+			$(avatar).show();
+			$(self.getElementByXid("div5")).hide();
+		});
+	};
+
+	Model.prototype.clipDialogReceive = function(event){
+		if(event.data.data){
+			event.data.promise.resolve(event.data.data);
+		}else{
+			event.data.promise.reject();
+		}
 	};
 
 	return Model;

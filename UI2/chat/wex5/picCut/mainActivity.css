@@ -1,0 +1,14 @@
+.img-preview {
+  float: left;
+  margin: 2px;
+
+   background-color: #f7f7f7;
+  overflow: hidden;
+}
+
+.result-img{
+	height:90px;
+	width:90px;
+	border:1px solid transparent;
+	border-radius:50%;
+}

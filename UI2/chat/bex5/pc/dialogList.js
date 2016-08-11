@@ -69,44 +69,6 @@ define(function(require) {
 		});
 	};
 	
-
-	
-	
-	Model.prototype.loadData = function(dataComp,newData,getRowCallback) {
-		var oldDataCount = dataComp.getCount();
-		if(oldDataCount === 0){
-			var rows = [];
-			for(var index = 0;index < newData.length ;index++){
-				var row = getRowCallback.call(this,newData[index]);
-				rows.push(row);
-			}
-			dataComp.loadData({
-				rows : rows
-			});
-			return;
-		}else if(newData.length === 0){
-			return;
-		}
-		
-		for(var index = 0;index < newData.length ;index++){
-			var item = newData[index];
-			var rows = dataComp.find([ "fID" ], [item.peer.peer.id]);
-			if(rows.length > 0){
-				var currentIndex = dataComp.getRowIndex(rows[0]);
-				if(currentIndex != index){
-					dataComp.moveRowTo((dataComp.datas.get())[currentIndex],(dataComp.datas.get())[index]);
-				}
-				getRowCallback.call(this,item,(dataComp.datas.get())[index]);
-			}else{
-				var row = getRowCallback.call(this,item);
-				dataComp.loadData([row], true,null,index);
-			}
-		}
-		for(var removeIndex = newData.length -1;removeIndex < dataComp.getCount(); removeIndex ++){
-			dataComp.datas.splice(newData.length);
-		}
-	};
-	
 	Model.prototype.getRowCallback = function(item,row) {
 		var person = item.peer.peer.type === "user" ? IM.getPersonByUID(item.peer.peer.id) : {};
 		var nickName = item.peer.peer.type === "user" ? person.name || item.peer.title : item.peer.title;
@@ -140,17 +102,16 @@ define(function(require) {
 		// var showNotification = false;
 		IM.bindDialogs(function(dialogs) {
 			var data = self.comp("dialogData");
-			self.loadData(data,dialogs,self.getRowCallback);
+			Utils.loadData(data,dialogs,self.getRowCallback);
 			var rows = data.toJson({
 				format : 'simple'
 			});
-			store.set("chat_dialogData", rows);
+			store.set("chat_dialogData", rows.rows);
 			
 		});
 	};
 
 	Model.prototype.bindGlobalCounter = function() {
-		var self = this;
 		IM.bindGlobalCounter(function(counter) {
 			if (counter) {
 				electronApp.sendMessage("newMessage",{counter:counter.counter});
