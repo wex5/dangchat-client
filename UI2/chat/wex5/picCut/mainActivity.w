@@ -27,7 +27,7 @@
         </div> 
       </div>  
     <div class="x-panel-content">
-    
+      
     
     <input type="file" value="" xid="inputImage" accept="image/*" style="display:none;"></input>
   <div component="$UI/system/components/justep/row/row" class="x-row" xid="row1">
