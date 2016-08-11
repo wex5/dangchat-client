@@ -3,7 +3,7 @@
 <div xmlns="http://www.w3.org/1999/xhtml" xmlns:xui="http://www.justep.com/xui" xid="window" class="window" component="$UI/system/components/justep/window/window"
   design="device:m;" sysParam="false">  
   <div component="$UI/system/components/justep/model/model" xid="model" style="height:auto;top:210px;left:78px;"
-    onModelConstructDone="modelModelConstructDone"/>  
+    onModelConstructDone="modelModelConstructDone" onInactive="modelInactive"/>  
   <div class="x-panel x-full x-cards" component="$UI/system/components/justep/panel/panel"
     xid="panel"> 
     <div class="x-panel-top" xid="top1">
